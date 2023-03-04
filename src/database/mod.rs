@@ -1,3 +1,4 @@
+mod files;
 use rusqlite::{params, Connection, Params, Row};
 
 pub struct DB {
@@ -11,6 +12,14 @@ impl DB {
         };
         db.init()?;
         Ok(db)
+    }
+    pub fn update(&self, path: &str) -> Result<(), rusqlite::Error> {
+        for path in files::get_paths(path) {
+            if let Some(file) = files::AudioFile::open(&path) {
+                file.insert(self)?
+            }
+        }
+        Ok(())
     }
     fn init(&self) -> Result<(), rusqlite::Error> {
         self.conn.execute(
