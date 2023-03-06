@@ -1,5 +1,9 @@
+mod albums;
 mod files;
+mod songs;
+pub use albums::*;
 use rusqlite::{params, Connection, Params, Row};
+pub use songs::*;
 
 pub struct DB {
     conn: Connection,

@@ -1,4 +1,4 @@
-use std::fs::{read_dir, File};
+use std::fs::read_dir;
 
 use lofty::{Accessor, Probe, TaggedFileExt};
 use rusqlite::params;
