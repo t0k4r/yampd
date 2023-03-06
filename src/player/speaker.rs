@@ -38,7 +38,8 @@ impl Speaker {
                         let mut lock = src.lock().unwrap();
                         lock.stream(data);
                         if !on_end_done && lock.ended() {
-                            on_end()
+                            on_end();
+                            on_end_done = true
                         }
                     } else {
                         for i in data {
