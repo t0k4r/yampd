@@ -1,8 +1,10 @@
 use rusqlite::params;
+use serde::Serialize;
+use utoipa::ToSchema;
 
 use super::{DBObject, DB};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, ToSchema)]
 pub struct Album {
     pub album_id: u32,
     pub artist_id: u32,

@@ -30,12 +30,14 @@ enum Cmd {
     SetPosition(Duration),
     Queue,
     Ended,
+    Now,
     Die,
 }
 enum Rpl {
     Is(bool),
     Time(Duration),
     Queue(Queue),
+    Now(Option<(u32, String)>),
 }
 pub struct Player {
     cmd: Sender<Cmd>,
@@ -147,9 +149,13 @@ impl Player {
                     Cmd::Die => {
                         break;
                     }
+                    Cmd::Now => rpl.send(Rpl::Now(queue.now())).unwrap(),
                 }
             }
         });
+    }
+    pub fn play(&self) {
+        self.cmd.send(Cmd::Play).unwrap()
     }
     pub fn push(&self, song: Song) {
         self.cmd.send(Cmd::Push(song)).unwrap();
@@ -197,6 +203,13 @@ impl Player {
         self.cmd.send(Cmd::Queue).unwrap();
         match self.rpl.recv().unwrap() {
             Rpl::Queue(que) => que,
+            _ => unreachable!(),
+        }
+    }
+    pub fn now(&self) -> Option<(u32, String)> {
+        self.cmd.send(Cmd::Now).unwrap();
+        match self.rpl.recv().unwrap() {
+            Rpl::Now(now) => now,
             _ => unreachable!(),
         }
     }
