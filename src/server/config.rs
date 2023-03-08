@@ -9,7 +9,7 @@ impl Config {
     pub fn read() -> Config {
         Config {
             db_path: "tmp.db".into(),
-            music: vec![],
+            music: vec!["/home/tokar/Music".into()],
         }
     }
     pub fn addr(&self) -> SocketAddr {

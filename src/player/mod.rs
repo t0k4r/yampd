@@ -11,9 +11,8 @@ use std::{
 use crate::database::Song;
 
 use self::{queue::Queue, source::Source, speaker::Speaker};
-
 mod queue;
-mod source;
+pub mod source;
 mod speaker;
 
 enum Cmd {

@@ -1,7 +1,9 @@
-use std::fs::read_dir;
+use std::fs::{read_dir, File};
 
 use lofty::{Accessor, Probe, TaggedFileExt};
 use rusqlite::params;
+
+use crate::player::source::Source;
 
 use super::DB;
 
@@ -22,18 +24,23 @@ impl AudioFile {
     pub fn open(path: &str) -> Option<AudioFile> {
         match Probe::open(path).unwrap().read() {
             Ok(tag) => tag.primary_tag().and_then(|tag| {
-                Some(AudioFile {
-                    album_artist: tag.get_string(&lofty::ItemKey::AlbumArtist)?.into(),
-                    album_title: tag.album()?.into(),
-                    album_year: tag.year()?,
-                    album_songs: tag.track_total()?,
-                    album_cover: tag.pictures().get(0)?.data().to_owned(),
-                    song_artist: tag.artist()?.into(),
-                    song_title: tag.title()?.into(),
-                    song_flie: path.into(),
-                    song_index: tag.track()?,
-                    song_ms: 0, // TODO: REDO WHEN AUDIO SOURCE IS DONE
-                })
+                if let Ok(src) = Source::new(File::open(path).unwrap()) {
+                    Some(AudioFile {
+                        // Source::new;/
+                        album_artist: tag.get_string(&lofty::ItemKey::AlbumArtist)?.into(),
+                        album_title: tag.album()?.into(),
+                        album_year: tag.year()?,
+                        album_songs: tag.track_total()?,
+                        album_cover: tag.pictures().get(0)?.data().to_owned(),
+                        song_artist: tag.artist()?.into(),
+                        song_title: tag.title()?.into(),
+                        song_flie: path.into(),
+                        song_index: tag.track()?,
+                        song_ms: src.duration().as_millis() as u32,
+                    })
+                } else {
+                    None
+                }
             }),
             Err(_) => None,
         }
