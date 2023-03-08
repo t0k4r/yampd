@@ -11,7 +11,7 @@ use cpal::{
 use super::source::Source;
 
 pub struct Speaker {
-    stream: Stream,
+    _stream: Stream,
     cmd: Sender<Arc<Mutex<Source>>>,
 }
 
@@ -53,7 +53,7 @@ impl Speaker {
             .unwrap();
         stream.play().unwrap();
         Speaker {
-            stream: stream,
+            _stream: stream,
             cmd: snd,
         }
     }

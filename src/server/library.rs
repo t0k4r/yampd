@@ -8,7 +8,7 @@ use axum::{
     Extension, Json, Router,
 };
 use serde::Deserialize;
-use utoipa::{IntoParams, ToSchema};
+use utoipa::ToSchema;
 
 use crate::database::{Album, Song, DB};
 

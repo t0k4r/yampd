@@ -62,7 +62,7 @@ impl Server {
         Server { conf, router }
     }
     pub async fn run(self) {
-        let srv = axum::Server::bind(&self.conf.addr())
+        let _ = axum::Server::bind(&self.conf.addr())
             .serve(self.router.into_make_service())
             .await;
     }

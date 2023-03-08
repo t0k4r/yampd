@@ -24,7 +24,7 @@ impl Queue {
         self.index = index
     }
     pub fn next(&mut self) {
-        if self.index < self.songs.len() {
+        if self.index < self.songs.len() - 1 {
             self.index += 1
         }
     }

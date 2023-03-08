@@ -13,6 +13,7 @@ pub struct Song {
     pub artist: String,
     pub album: String,
     pub ms: u32,
+    #[serde(skip)]
     pub file: String,
 }
 impl DBObject for Song {
@@ -73,19 +74,5 @@ impl Song {
         "#,
             params![id],
         )
-    }
-    pub fn by_file(db: &DB, file: &str) -> Option<Song> {
-        db.query(
-            r#"
-        SELECT s.song_id, s.artist_id, s.album_id, s.song_title, ar.artist_name, al.album_title, s.song_ms, s.song_file
-        FROM Songs s
-        JOIN Artists ar ON s.artist_id = ar.artist_id
-        JOIN Albums al ON s.album_id = al.album_id
-        WHERE s.song_file = ?1
-        "#,
-            params![file],
-        )
-        .get(0)
-        .cloned()
     }
 }
