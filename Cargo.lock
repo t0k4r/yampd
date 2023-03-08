@@ -1920,6 +1920,7 @@ dependencies = [
  "lofty",
  "rusqlite",
  "serde",
+ "serde_json",
  "symphonia",
  "tokio",
  "utoipa",

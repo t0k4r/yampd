@@ -1,18 +1,24 @@
-use std::{net::SocketAddr, str::FromStr};
+use std::{fs::File, io::Read, net::SocketAddr, str::FromStr};
 
+use serde::Deserialize;
+
+#[derive(Debug, Clone, Deserialize)]
 pub struct Config {
     pub db_path: String,
     pub music: Vec<String>,
+    pub addr: String,
 }
 
 impl Config {
     pub fn read() -> Config {
-        Config {
-            db_path: "tmp.db".into(),
-            music: vec!["/home/tokar/Music".into()],
-        }
+        let mut buf = String::new();
+        File::open("yampd.json")
+            .unwrap()
+            .read_to_string(&mut buf)
+            .unwrap();
+        serde_json::from_str(&buf).unwrap()
     }
     pub fn addr(&self) -> SocketAddr {
-        SocketAddr::from_str("127.0.0.1:2137").unwrap()
+        SocketAddr::from_str(&self.addr).unwrap()
     }
 }
