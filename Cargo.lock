@@ -1917,6 +1917,7 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "cpal",
+ "dirs",
  "lofty",
  "rusqlite",
  "serde",
