@@ -222,17 +222,18 @@ pub async fn queue_album(
 )]
 pub async fn now(Extension(ply): Extension<Arc<Mutex<Player>>>) -> impl IntoResponse {
     let lock = ply.lock().unwrap();
-    match lock.now() {
-        Some((id, _)) => (
+    if let Some((id, _)) = lock.now() {
+        (
             StatusCode::OK,
-            Json(Some(Now {
+            Json(Now {
                 id: id,
                 pos: lock.position().as_millis(),
                 dur: lock.duration().as_millis(),
                 pause: lock.is_paused(),
-            })),
-        ),
-        None => (StatusCode::NOT_FOUND, Json(None)),
+            }),
+        )
+            .into_response()
+    } else {
+        (StatusCode::NOT_FOUND).into_response()
     }
-    .into_response()
 }
