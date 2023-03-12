@@ -9,3 +9,6 @@ it requires alsa and sqlite libraries
 ```sh
 sudo dnf install alsa-devel sqlite-devel
 ```
+## TODO
+- [ ] MPRIS
+- [ ] Document the code
