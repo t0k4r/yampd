@@ -86,6 +86,8 @@ impl Player {
                                     source.replace(src);
                                 }
                             }
+                        } else {
+                            speaker = Speaker::new(channels, sample_rate, on_end.clone())
                         }
                     }
                     Cmd::Push(song) => {
