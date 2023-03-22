@@ -5,6 +5,7 @@ use std::sync::{Arc, Mutex};
 
 use axum::{Extension, Router};
 pub use config::*;
+use tower_http::cors::{Any, CorsLayer};
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
@@ -50,6 +51,7 @@ pub struct Server {
 
 impl Server {
     pub fn new(conf: Config) -> Server {
+        let cors = CorsLayer::new().allow_origin(Any);
         let db = DB::open(&conf.db_path).unwrap();
         conf.music.iter().for_each(|path| db.update(path).unwrap());
         let router = Router::new()
@@ -57,7 +59,8 @@ impl Server {
             .nest("/ply", player::player())
             .nest("/lib", library::library())
             .layer(Extension(Arc::new(Mutex::new(db))))
-            .layer(Extension(Arc::new(Mutex::new(Player::new()))));
+            .layer(Extension(Arc::new(Mutex::new(Player::new()))))
+            .layer(cors);
 
         Server { conf, router }
     }
