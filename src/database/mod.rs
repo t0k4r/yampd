@@ -1,7 +1,9 @@
 mod albums;
+mod covers;
 mod files;
 mod songs;
 pub use albums::*;
+pub use covers::*;
 use rusqlite::{params, Connection, Params, Row};
 pub use songs::*;
 

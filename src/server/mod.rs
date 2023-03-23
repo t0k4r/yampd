@@ -19,6 +19,7 @@ use crate::{database::DB, player::Player};
         library::song_by_album_id,
         library::album_by_title,
         library::album_by_id,
+        library::cover_by_id,
         player::play,
         player::pause,
         player::unpause,
