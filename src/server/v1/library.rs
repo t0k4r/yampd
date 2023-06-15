@@ -1,7 +1,7 @@
 use std::sync::{Arc, Mutex};
 
 use axum::{
-    body::{Body, BoxBody, HttpBody},
+    body::Body,
     extract::Path,
     http::StatusCode,
     response::{IntoResponse, Response},
