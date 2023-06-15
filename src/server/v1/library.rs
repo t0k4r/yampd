@@ -9,11 +9,10 @@ use axum::{
     Extension, Json, Router,
 };
 use serde::Deserialize;
-use utoipa::ToSchema;
 
 use crate::database::{Album, Cover, Song, DB};
 
-#[derive(Debug, Deserialize, ToSchema)]
+#[derive(Debug, Deserialize)]
 pub struct Query {
     like: String,
 }
@@ -28,28 +27,13 @@ pub fn library() -> Router {
         .route("/cover/:id", get(cover_by_id))
 }
 
-#[utoipa::path(
-    post,
-    path = "/lib/song",
-    request_body = Query,
-    responses(
-        (status = 200, description = "Get array of Songs with title like", body = [Song]),
-    )
-)]
 pub async fn song_by_title(
     Extension(db): Extension<Arc<Mutex<DB>>>,
     Json(payload): Json<Query>,
 ) -> impl IntoResponse {
     Json(Song::by_title(&db.lock().unwrap(), &payload.like))
 }
-#[utoipa::path(
-    get,
-    path = "/lib/song/{id}",
-    responses(
-        (status = 200, description = "Get Song by id", body = Song),
-        (status = 404, description = "Song not found")
-    )
-)]
+
 pub async fn song_by_id(
     Extension(db): Extension<Arc<Mutex<DB>>>,
     Path(id): Path<u32>,
@@ -60,13 +44,6 @@ pub async fn song_by_id(
     }
 }
 
-#[utoipa::path(
-    get,
-    path = "/lib/song/album/{id}",
-    responses(
-        (status = 200, description = "Get array of Songs from album with id", body = [Song]),
-    )
-)]
 pub async fn song_by_album_id(
     Extension(db): Extension<Arc<Mutex<DB>>>,
     Path(id): Path<u32>,
@@ -74,14 +51,6 @@ pub async fn song_by_album_id(
     Json(Song::by_album_id(&db.lock().unwrap(), id))
 }
 
-#[utoipa::path(
-    post,
-    path = "/lib/album",
-    request_body = Query,
-    responses(
-        (status = 200, description = "Get array of Albums with title like", body = [Album]),
-    )
-)]
 pub async fn album_by_title(
     Extension(db): Extension<Arc<Mutex<DB>>>,
     Json(payload): Json<Query>,
@@ -92,14 +61,7 @@ pub async fn album_by_title(
     )
         .into_response()
 }
-#[utoipa::path(
-    get,
-    path = "/lib/album/{id}",
-    responses(
-        (status = 200, description = "Get Album by id", body = Album),
-        (status = 404, description = "Album not found")
-    )
-)]
+
 pub async fn album_by_id(
     Extension(db): Extension<Arc<Mutex<DB>>>,
     Path(id): Path<u32>,
@@ -109,14 +71,7 @@ pub async fn album_by_id(
         None => (StatusCode::NOT_FOUND).into_response(),
     }
 }
-#[utoipa::path(
-    get,
-    path = "/lib/cover/{id}",
-    responses(
-        (status = 200, description = "cover found"),
-        (status = 404, description = "cover not found")
-    )
-)]
+
 pub async fn cover_by_id(
     Extension(db): Extension<Arc<Mutex<DB>>>,
     Path(id): Path<u32>,
